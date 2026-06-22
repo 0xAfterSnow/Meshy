@@ -396,6 +396,19 @@ export default function Home() {
         }
         .msg-appear { animation: slideIn 0.25s ease; }
         .thinking-dot { animation: blink 1s ease infinite; }
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-8px); }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-14px); }
+        }
+        .floating       { animation: float 3.5s ease-in-out infinite; will-change: transform; }
+        .floating-slow  { animation: float-slow 4.5s ease-in-out infinite; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) {
+          .floating, .floating-slow { animation: none; }
+        }
         textarea:focus, input:focus { outline: none; border-color: var(--accent) !important; }
         .project-item:hover { background: var(--surface2) !important; border-color: var(--border2) !important; }
         .project-item.active { background: var(--accent-dim) !important; border-color: var(--accent) !important; }
@@ -578,6 +591,7 @@ export default function Home() {
                   alt=""
                   width={36}
                   height={36}
+                  className="floating"
                   style={{ width: 36, height: 36, objectFit: "contain", opacity: 0.85 }}
                 />
                 <span>Pick a project in the sidebar, or create a new one to get started.</span>
@@ -594,6 +608,7 @@ export default function Home() {
                   alt="Meshy mascot"
                   width={220}
                   height={220}
+                  className="floating-slow"
                   style={{ width: 220, height: 220, objectFit: "contain", filter: "drop-shadow(0 12px 32px rgba(123, 97, 255, 0.25))" }}
                 />
                 <div style={{ textAlign: "center", maxWidth: 360 }}>
@@ -630,6 +645,7 @@ export default function Home() {
               alt="Meshy mascot"
               width={220}
               height={220}
+              className="floating-slow"
               style={{ width: 220, height: 220, objectFit: "contain", filter: "drop-shadow(0 12px 32px rgba(123, 97, 255, 0.25))" }}
               />
                 <div style={{ color: "var(--text2)", fontSize: 13, textAlign: "center" }}>
@@ -771,6 +787,7 @@ export default function Home() {
                   alt=""
                   width={96}
                   height={96}
+                  className="floating"
                   style={{ width: 96, height: 96, objectFit: "contain", opacity: 0.7 }}
                 />
                 <div>
