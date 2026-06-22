@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+/* ─── Theme variables ────────────────────────────────────────────────────────
+   The data-theme attribute is set on <body> (not <html>) by the toggle.
+   Both selectors below have identical specificity, so whichever attribute is
+   present wins. We use !important on the variable declarations to guarantee
+   they win over any rule Tailwind might inject. */
+
+html[data-theme="dark"],
+html:not([data-theme]),
+body[data-theme="dark"] {
+  --bg: #0a0a0f !important;
+  --bg2: #0f0f1a !important;
+  --bg3: #141428 !important;
+  --surface: #161625 !important;
+  --surface2: #1c1c32 !important;
+  --border: #2a2a45 !important;
+  --border2: #363660 !important;
+  --accent: #7B61FF !important;
+  --accent2: #9d85ff !important;
+  --accent-dim: rgba(123, 97, 255, 0.15) !important;
+  --accent-glow: rgba(123, 97, 255, 0.3) !important;
+  --green: #00d97e !important;
+  --green-dim: rgba(0, 217, 126, 0.15) !important;
+  --orange: #ff9500 !important;
+  --orange-dim: rgba(255, 149, 0, 0.15) !important;
+  --red: #ff4d4d !important;
+  --text: #e8e8f0 !important;
+  --text2: #9090b0 !important;
+  --text3: #5a5a7a !important;
+}
+
+html[data-theme="light"],
+body[data-theme="light"] {
+  --bg: #fafafa !important;
+  --bg2: #f3f3f7 !important;
+  --bg3: #ebebf2 !important;
+  --surface: #ffffff !important;
+  --surface2: #f7f7fb !important;
+  --border: #e2e2ea !important;
+  --border2: #cfcfdc !important;
+  --accent: #6b4cff !important;
+  --accent2: #5a3ce5 !important;
+  --accent-dim: rgba(107, 76, 255, 0.10) !important;
+  --accent-glow: rgba(107, 76, 255, 0.22) !important;
+  --green: #16a34a !important;
+  --green-dim: rgba(22, 163, 74, 0.10) !important;
+  --orange: #d97706 !important;
+  --orange-dim: rgba(217, 119, 6, 0.10) !important;
+  --red: #dc2626 !important;
+  --text: #15151f !important;
+  --text2: #55556a !important;
+  --text3: #8a8aa0 !important;
+}
+
+:root {
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Syne', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+::selection { background: var(--accent-dim); color: var(--accent2); }
