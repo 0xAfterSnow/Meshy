@@ -4,6 +4,22 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Meshy — Persistent AI Agent Memory on 0G",
   description: "AI agents that remember across sessions, powered by 0G decentralized storage.",
+  icons: {
+    icon: [{ url: "/logo.png", type: "image/png" }],
+    apple: [{ url: "/logo.png" }],
+  },
+  openGraph: {
+    title: "Meshy — Persistent AI Agent Memory on 0G",
+    description: "AI agents that remember across sessions, powered by 0G decentralized storage.",
+    images: [{ url: "/cover.png", width: 1200, height: 1200, alt: "Meshy mascot" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Meshy — Persistent AI Agent Memory on 0G",
+    description: "AI agents that remember across sessions, powered by 0G decentralized storage.",
+    images: ["/cover.png"],
+  },
 };
 
 // Inline pre-paint script: applies the saved theme to <html> before React hydrates,

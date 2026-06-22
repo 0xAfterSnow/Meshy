@@ -441,22 +441,13 @@ export default function Home() {
                 gap: 8,
               }}
             >
-              <span
-                style={{
-                  background: "var(--accent)",
-                  color: "#fff",
-                  width: 24,
-                  height: 24,
-                  borderRadius: 6,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 13,
-                  fontWeight: 700,
-                }}
-              >
-                ◆
-              </span>
+              <img
+                src="/logo.png"
+                alt="Meshy"
+                width={28}
+                height={28}
+                style={{ width: 28, height: 28, borderRadius: 6, objectFit: "contain", display: "block" }}
+              />
               Meshy
               <button
                 onClick={toggleTheme}
@@ -581,15 +572,66 @@ export default function Home() {
                 </div>
               </>
             ) : (
-              <span style={{ color: "var(--text3)" }}>Select or create a project</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--text3)", fontSize: 12 }}>
+                <img
+                  src="/cover-no-bg.png"
+                  alt=""
+                  width={36}
+                  height={36}
+                  style={{ width: 36, height: 36, objectFit: "contain", opacity: 0.85 }}
+                />
+                <span>Pick a project in the sidebar, or create a new one to get started.</span>
+              </div>
             )}
           </div>
 
           {/* Messages */}
-          <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column" }}>
+            {!activeProject && projects.length === 0 && (
+              <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, padding: "32px 16px" }}>
+                <img
+                  src="/cover-no-bg.png"
+                  alt="Meshy mascot"
+                  width={220}
+                  height={220}
+                  style={{ width: 220, height: 220, objectFit: "contain", filter: "drop-shadow(0 12px 32px rgba(123, 97, 255, 0.25))" }}
+                />
+                <div style={{ textAlign: "center", maxWidth: 360 }}>
+                  <div style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700, color: "var(--text)", marginBottom: 6 }}>
+                    Welcome to Meshy
+                  </div>
+                  <div style={{ color: "var(--text2)", fontSize: 13, lineHeight: 1.5 }}>
+                    Persistent AI agent memory, stored on 0G. Create your first project to start chatting.
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowNewProject(true)}
+                  style={{
+                    background: "var(--accent)",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 6,
+                    padding: "8px 18px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    fontFamily: "var(--font-mono)",
+                    marginTop: 4,
+                  }}
+                >
+                  + Create your first project
+                </button>
+              </div>
+            )}
             {chat.length === 0 && activeProject && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 12, opacity: 0.5 }}>
-                <div style={{ fontSize: 32 }}>🧠</div>
+              <img
+              src="/cover-no-bg.png"
+              alt="Meshy mascot"
+              width={220}
+              height={220}
+              style={{ width: 220, height: 220, objectFit: "contain", filter: "drop-shadow(0 12px 32px rgba(123, 97, 255, 0.25))" }}
+              />
                 <div style={{ color: "var(--text2)", fontSize: 13, textAlign: "center" }}>
                   Start talking about your project.
                   <br />
@@ -723,13 +765,21 @@ export default function Home() {
           {/* Memories list */}
           <div style={{ flex: 1, overflowY: "auto", padding: "10px 10px" }}>
             {memories.length === 0 && (
-              <div style={{ textAlign: "center", padding: "40px 20px", color: "var(--text3)", fontSize: 12, lineHeight: 1.8 }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>🫧</div>
-                Chat with the agent.
-                <br />
-                Important project facts will
-                <br />
-                appear here automatically.
+              <div style={{ textAlign: "center", padding: "32px 16px", color: "var(--text3)", fontSize: 12, lineHeight: 1.7, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                <img
+                  src="/cover-no-bg.png"
+                  alt=""
+                  width={96}
+                  height={96}
+                  style={{ width: 96, height: 96, objectFit: "contain", opacity: 0.7 }}
+                />
+                <div>
+                  Chat with the agent.
+                  <br />
+                  Important project facts will
+                  <br />
+                  appear here automatically.
+                </div>
               </div>
             )}
             {memories.map((m) => (
