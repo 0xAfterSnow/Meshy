@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
 import { getProject, getMemoryContext, processChatTurn } from "@/lib/project-store";
 
 export async function POST(req: NextRequest) {
@@ -15,10 +14,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
-    // Get relevant memories for this message
     const memoryContext = getMemoryContext(projectId, message);
 
-    // Build the system prompt with memory context
     const systemPrompt = `You are a coding assistant with persistent memory for the project "${project.name}".
 
 ${project.description ? `Project description: ${project.description}\n` : ""}
@@ -28,27 +25,71 @@ You remember everything important that has been discussed about this project acr
 When answering, reference relevant memories naturally. If you learn something new and important, acknowledge that you'll remember it.
 Keep responses focused and practical. Format code properly.`;
 
-    if (!process.env.OPENAI_API_KEY) {
+    // Supports both Anthropic and OpenRouter (or any OpenAI-compatible API)
+    const useOpenRouter = !!process.env.OPENROUTER_API_KEY;
+    const useAnthropic = !!process.env.ANTHROPIC_API_KEY;
+
+    if (!useOpenRouter && !useAnthropic) {
       return NextResponse.json(
-        { error: "Missing OPENAI_API_KEY. Add it to .env.local — see .env.example." },
+        { error: "No API key found. Add ANTHROPIC_API_KEY or OPENROUTER_API_KEY to .env.local" },
         { status: 500 }
       );
     }
 
-    // Call OpenAI API
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, baseURL: "https://api.badtheorylabs.com/v1" });
-    const completion = await openai.chat.completions.create({
-      model: "btl-2",
-      max_tokens: 1000,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: message },
-      ],
-    });
+    let assistantMessage = "";
 
-    const assistantMessage = completion.choices[0]?.message?.content || "No response";
+    if (useOpenRouter) {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "HTTP-Referer": "https://memorymesh.app",
+          "X-Title": "MemoryMesh",
+        },
+        body: JSON.stringify({
+          model: "gpt-oss-120b", // free tier model
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: message },
+          ],
+          max_tokens: 1000,
+        }),
+      });
 
-    // Process this turn: extract memories and sync to 0G
+      if (!response.ok) {
+        const err = await response.text();
+        return NextResponse.json({ error: `OpenRouter error: ${err}` }, { status: 500 });
+      }
+
+      const data = await response.json();
+      assistantMessage = data.choices?.[0]?.message?.content || "No response";
+
+    } else {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.ANTHROPIC_API_KEY!,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [{ role: "user", content: message }],
+        }),
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        return NextResponse.json({ error: `Anthropic error: ${err}` }, { status: 500 });
+      }
+
+      const data = await response.json();
+      assistantMessage = data.content?.[0]?.text || "No response";
+    }
+
     const { memoriesAdded, storageResult } = await processChatTurn(
       projectId,
       message,
